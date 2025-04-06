@@ -1,0 +1,628 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>4.变量、作用域与内存 | kitty</title><meta name="keywords" content="JavaScript,学习笔记"><meta name="author" content="kitty"><meta name="copyright" content="kitty"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="4.变量、作用域与内存"><meta name="application-name" content="4.变量、作用域与内存"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="4.变量、作用域与内存"><meta property="og:url" content="http://example.com/2024/08/12/JavaScript/4.%E5%8F%98%E9%87%8F%E3%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98/index.html"><meta property="og:site_name" content="kitty"><meta property="og:description" content="原始值与引用值原始值：  最简单的数据 Undefined,null,boolean,number,string,symbol 六种 一般放在栈中 保存原始值的变量是按值访问，操作的是存储在变量中的实际值  引用值：  多个值构成的，保存在内存中的对象 操作对象时，实际上操作的是该对象的引用而非实际"><meta property="og:locale" content="en"><meta property="og:image" content="https://www.helloimg.com/i/2025/04/06/67f217755d352.png"><meta property="article:author" content="kitty"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://www.helloimg.com/i/2025/04/06/67f217755d352.png"><meta name="description" content="原始值与引用值原始值：  最简单的数据 Undefined,null,boolean,number,string,symbol 六种 一般放在栈中 保存原始值的变量是按值访问，操作的是存储在变量中的实际值  引用值：  多个值构成的，保存在内存中的对象 操作对象时，实际上操作的是该对象的引用而非实际"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="http://example.com/2024/08/12/JavaScript/4.%E5%8F%98%E9%87%8F%E3%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98/"><link rel="preconnect" href="//cdn.cbd.int"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: {"enable":true,"leaveTitle":"w(ﾟДﾟ)w 不要走！再看看嘛！","backTitle":"♪(^∇^*)欢迎肥来！"},
+  LA51: undefined,
+  greetingBox: undefined,
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  music_page_default: "nav_music",
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: false,
+  mainTone: {"mode":"api","api":"https://img2color-go.vercel.app/api?img=","cover_change":true},
+  authorStatus: {"skills":null},
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":330},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"Author: kitty","link":"Link: ","source":"Source: kitty","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.","copySuccess":"复制成功"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: 'kitty',
+  title: '4.变量、作用域与内存',
+  postAI: '',
+  pageFillDescription: '原始值与引用值, 复制值, 传递参数, 垃圾产生, 垃圾回收, 基本思路, 标记清理, 优点：, 缺点：, 如何找到合适的块？, 缺点补充-标记整理, 引用计数, 产生的问题：, 优点, 缺点, 对垃圾回收的优化, 分代式垃圾回收机制, 新老生代, 新生代垃圾回收, 并行回收, 老生代垃圾回收, 为什么需要分代式？, 增量标记与懒性清理, 增量, 三色标记法, 背景：, 优点：, 写屏障, 背景, 惰性清理, 增量标记与惰性清理优缺, 优, 缺, 并发回收, 缺点, 性能, 内存管理, 1.保证只保存必要的数据, 2.通过 const 和 let 声明提升性能, 3.隐藏类和删除操作, 4.内存泄漏, 全局变量, 闭包, 游离 DOM 引用, 遗忘的定时器, 遗忘的事件监听器, 遗忘的监听者模式, 遗忘的 MapSet 对象, 未清理的 Console 输出, 内存泄漏排查定位和修复, 5.静态分配与对象池, 对象池, 内存三大件, 内存泄漏, 内存膨胀, 频繁 GC原始值与引用值原始值最简单的数据六种一般放在栈中保存原始值的变量是按值访问操作的是存储在变量中的实际值引用值多个值构成的保存在内存中的对象操作对象时实际上操作的是该对象的引用而非实际对象本身保存引用值的变量是按引用访问的复制值原始值上复制值与被复制两个变量都是独立的引用值上复制的值是一个指针指向存储的堆内存中的对象实际上两个变量指的是同一个对象传递参数所有的函数参数都是按值传递的意味着函数外的值会被复制到函数内部的函数中表明函数中参数的值改变后原始的引用仍然没变当函数内部被重写时它变成一个指向本地对象的指针而那个本地对象在函数执行结束时已被摧毁垃圾产生的引用数据类型是存在堆中然后在栈内存中保存一个堆内存中实际对象的引用栈内存中保存了一个地址这个地址和堆内存中实际值是相关的垃圾产生的原因是因为引用数据类型发生了重新赋值的过程中失去了与上一个对象的引用关系一多就爆内存垃圾回收是使用垃圾回收的语言是执行环境负责在代码执行时管理内存通过自动内存管理实现内存分配和闲置资源回收离开作用域的值会被自动标记为可回收然后在垃圾回收期间被删除基本思路确定哪个变量不会再使用然后释放它占用的内存整个过程是周期性的隔一段时间就自动运行函数中的局部变量会在函数执行时存在栈或堆内存会分配空间以保存相应的值函数在内部使用了变量然后退出此时就不再需要那个局部变量了它占用的内存可以释放供后面使用垃圾回收程序如何判断哪些变量不会再使用标记清理变量进入上下文作用域比如在函数内部声明一个变量该变量会被加上存在于上下文中的标记当变量离开上下文时会被加上离开的标记标记过程的实现并不重要关键是策略垃圾回收程序运行时会标记内存中所有变量默认全是垃圾将所有在上下文中的变量被在上下文中变量引用的变量标记去掉把不是垃圾的改成在此之后再被加上标记的就是待删除的因为任何上下文中的变量都访问不到它们此时已经离开上下文了随后垃圾回收程序做一次内存清理销毁带标记的所有值并收回内存优点实现简单用二进制就可以标记缺点内存碎片清除后剩余的对象内存位置不变会导致空闲内存空间不连续出现内存碎片能会出现分配所需内存过大的对象时找不到合适的块分配速度慢操作仍是一个大对象的分配效率会更慢如何找到合适的块找到大于等于的块立即返回推荐遍历整个空闲列表返回大于等于的最小分块遍历整个空闲列表找到最大的分块然后切成两部分一部分大小并将该部分返回不推荐缺点补充标记整理标记结束后标记整理算法会将不需要清理的对象向内存的一端移动最后清理掉边界的内存引用计数对每个值都记录被引用的次数被引用被覆盖为代表无法再访问到此时可以收回内存产生的问题循环引用对象有一个指针指向对象而对象也引用了对象用引用计数两个都是引擎不再使用这种算法但某些旧版本的仍然会受这种算法的影响原因是会访问非原生对象如元素设置为才能切断关系但是就把和给换成对象这同时也避免了由于存在两套垃圾回收算法而导致的问题还消除了常见的内存泄漏现象优点引用计数在引用为时就立刻被回收缺点需要个计数器无法解决循环引用无法回收的问题对垃圾回收的优化分代式垃圾回收机制新老生代新生代的对象为存活时间短的对象新产生的对象一般只的容量老生代为存活时间较长或常驻内存的对象经历过新生代垃圾回收后存活下来的对象容量通常比较大两个生代垃圾回收器不同新生代垃圾回收新加入的对象会存放到使用区当使用区快写满时需要执行一次垃圾清理如何进行垃圾操作新生代垃圾回收器对使用区中的活动对象做标记标记成功后将使用区的活动对象复制到空闲区排序清理阶段将非活动对象占用空间清理将使用区变空闲区空闲区变使用区如果一个对象经过多次复制还存活生命周期较长对象移到老生代对象太大影响后期内存分配移到老生代并行回收全停顿是一门单线程语言是运行在主线程上的在进行垃圾回收时会堵塞脚本的执行需要等待垃圾回收完后再恢复运行如果一次垃圾回收需要那应用逻辑就得停时间过长可能会造成页面卡顿的问题并行回收叫上两个辅助线程和主线程一起干活但是主线程还是需要让出来的只是时间变短了这个过程内存是静态的不需要考虑内存中对象的引用关系改变只需要考虑协同新生代对象空间就采用并行策略在执行垃圾回收的过程中会启动了多个线程来负责新生代中的垃圾清理操作这些线程同时将对象空间中的数据移动到空闲区域这个过程中由于数据地址会发生改变所以还需要同步更新引用这些对象的指针此即并行回收老生代垃圾回收用的标记清除算法因为老生代中的对象通常比较大用新生代的处理方式耗时从一组根元素开始递归遍历这组根元素遍历过程中能到达的元素活动对象没达到非活动对象直接清非活动对象会使用标记整理算法来优化空间主要是使用并发标记标记完成后再执行并行清理清理任务会采用增量方式分批在各个任务之间执行为什么需要分代式把一些新小存活时间短的对象作为新生代采用一小块内存频率较高的快速清理而一些大老存活时间长的对象作为老生代使其很少接受检查新老生代回收机制及频率不同此机制出现很大程度提高了垃圾回收机制的效率增量标记与懒性清理并行策略虽然好但它还是全停顿式的对于老生代来说如果对象太大那还是会消耗大量的时间所以将全停顿标记切换成增量标记增量将一次标记的过程分成多个小步每执行完一小步就停一会让应用逻辑执行一会交替着来完成一轮标记每小次标记完后如何暂停下去执行任务又如何恢复的如果在暂停标记的后将标记好的对象引用关系修改了又咋办三色标记法背景老生代采用的标记清理算法在没有增量算法之前单纯使用黑色和白色来标记垃圾回收器将所有的数据置白色垃圾回收器将所有访问到的数据标为黑色标记为黑色的数据对象是活动对象剩余白色是带清理的垃圾对象但是这种标记法在垃圾回收器执行了一段增量回收后暂停后启动主线程执行了应用程序中的一段代码垃圾回收器再次被启动这时内存中黑白色都有无法得知下一步走到哪里白色指的是未被标记的对象灰色指自身被标记成员变量该对象的引用对象未被标记黑色指自身和成员变量皆被标记从白灰黑有灰色标记恢复时直接从灰色阶段开始继续执行无灰色标记直接进入清理阶段优点不需每次都扫描整个内存空间可以很好的配合增量回收进行暂停恢复的操作减少全停顿时间写屏障背景在增量中修改引用比如都要清理了突然有了新引用但是要被回收了后面的程序还要用到就不对了一旦有黑色对象引用白色对象该机制会强制将引用的白色对象改为灰色保证下一次增量标记阶段可以正确标记强三色不变性即强制改为灰色惰性清理对活动对象和非活动对象做标记对真正的清理释放内存采用的惰性清理增量标记完后假如当前的可用内存足以让我们执行代码那是不需要立刻清理内存将清理程序延迟一下也无需一次性清理完所有的非活动对象内存可以按需逐一进行清理直到所有的非活动对象内存清理完毕后面再执行增量标记增量标记与惰性清理优缺优主线程停顿时间大大减少让用于与浏览器交互过程变流畅缺没有减少主线程总暂停时间甚至稍微增加写屏障机制成本增量标记可能会降低应用程序的吞吐量并发回收因为并行回收会阻塞主线程增量标记同样增加了总暂停时间在主线程执行过程中辅助线程能够在后台完成执行垃圾回收的操作辅助线程在执行垃圾回收时主线程可以自由执行不被挂起缺点需要考虑主线程在执行时堆中对象引用关系随时都有可能变化这时辅助线程之前做的标记或者正在进行的标记也会改变所以需要实现一些读写锁来控制性能以前调度垃圾回收程序的策略是根据分配数比如个变量或字符串只要满足某个条件垃圾回收程序就会运行但是问题在于其整个生命周期内始终需要那么多变量结果就会导致垃圾回收程序过于频繁地运行现在改为动态改变分配变量字面量或数组槽位等会触发垃圾回收的阈值如果垃圾回收程序回收的内存不到已分配的这些变量字面量或数组槽位的阈值就会翻倍如果有一次回收的内存达到已分配的则阈值重置为默认值内存管理的运行是在一个内存管理和垃圾回收都特殊的环境浏览器的内存通常分配的比较少所以为了避免运行大量的网页耗尽系统内存而导致操作系统崩溃需要将内存占用量保持在一个较小的值保证只保存必要的数据接触引用如果数据不再必要设置为释放其引用局部变量在超出作用域后会被自动解除引用适合全局变量和全局对象的属性执行完会自动解除引用是全局变量需要手动解除对值的引用解除对一个值引用不会自动导致相关内存被回收通过和声明提升性能因为都以块为作用域相比起使用这两个新关键字可能会更早地让垃圾回收程序介入尽早回收应该回收的内存隐藏类和删除操作浏览器运行期间浏览器会将创建的对象与隐藏类关联起来以追踪它们的属性特征共享相同隐藏类的对象性能会更好这种情况下会在后台配置让这两个类实例共享相同的隐藏类因为这两个实例共享同一个构造函数和原型假设再添加此时两个实例就会对应两个不同的隐藏类对性能产生明显影响可以先创建后补充使用关键字会导致生成相同的隐藏类片段最好是改成这样保持隐藏类不变和继续共享同时也能达到删除引用值供垃圾回收程序回收的效果动态删除属性与动态添加属性导致的后果一样内存泄漏当不再用到的对象内存没有及时被回收全局变量在没有任何关键字声明的变量解释器会把变量当作的属性来创建这样不被清理就不会消失所以需要加关键字定时器的回调通过闭包引用了外部变量只要定时器一直运行回调函数中引用的就会一直占用内存闭包把外部的引用关系置空才不会造成内存泄漏调用会导致分配给的内存被泄漏以上代码执行后创建了一个内部闭包只要返回的函数存在就不能清理因为闭包一直在引用着它游离引用我们代码中进行时会使用变量缓存节点的引用移除节点的时候我们应该同步释放缓存的引用否则游离的子树无法释放由于变量存在整个及其子元素都不能虽置空了变量但由于变量引用的子节点所以元素依然不能被父节点置空但是被删除的父节点其子节点引用也缓存在变量中那么会导致整个父节点树下整个游离节点树无法清理解决方法就是将子节点的变量也置空已无变量引用此时可以遗忘的定时器获取数据只有当定时器结束后执行才会被回收没有被会造成内存泄漏遗忘的事件监听器当事件监听器在组件内挂载相关的事件处理函数而在组件销毁时不主动将其清除其中引用的变量或函数都被认为是需要的而不会被回收需要在销毁的时候注销遗忘的监听者模式遗忘的对象使用或存储对象同都是强引用垃圾回收机制是如果我们持有一个对象的引用那么这个对象就不会被垃圾回收指的是强引用如果需要使用或者可以采用或者只允许存储对象弱引用的唯一值不会干扰的垃圾回收弱引用指的是一个对象若只被弱引用所引用则被认为是不可访问的因此可能在任何时刻被回收是一个强引用对象存于内存可用重写引用对象从内存移除回收对象重写即使但是都强引用了它所以还能获得到需要将所有引用都清空重写引用将在下一次中从内存中删除使用了以及即为弱引用将引用置为后对象将在下一次中清理出内存未清理的输出可以在控制台看到数据输出是因为浏览器保存了我们输出对象的信息数据引用内存泄漏排查定位和修复具体看硬核你的程序中可能存在内存泄漏掘金静态分配与对象池压榨浏览器减少浏览器执行垃圾回收的次数合理使用分配的内存不要过度动态创建矢量对象对象更替的速度是运行垃圾回收程序的一个标准创建一个新对象然后修改返回生命周期很短很快失去所有对它的引用成为可以被回收的值如果被频繁的调用那么回收程序会发现对象更替的速度很快从而更频繁地安排回收改为已有的矢量对象如果需要在其他地方实例化矢量的行为没有变可以考虑用对象池进行创建对象池在初始化时创建一个对象池用来管理一组可回收的对象应用程序可以向该对象池请求一个对象设置属性使用操作完成后再还给对象池因为没发生对象初始化垃圾回收检测不会发现有对象更替是已有的对象池如果对象有属性引用了其他对象则这里也需要把这些属性设置为如果对象池是在对象不存在时创建新的在对象存在时复用那么实现的本质是有单调增长但为静态的内存需要使用某种结构维护所有对象用数组比较好这种写法引擎会先删除大小为的数组然后再创建新的大小为的数组垃圾回收程序看到这个操作可能很快会过来收垃圾在初始化时创建一个大小够用的数组可以避免上述删除再创建的操作静态分配是优化的一种极端形式内存三大件内存泄漏对象不再使用但是没有被回收内存没有被释放内存膨胀短时间内内存占用极速上升到达一个峰值想要避免需要使用技术手段减少堆内存的占用频繁执行的特别频繁一般出现在频繁使用大的临时变量导致新生代空间被装满的速度极快而每次新生代装满时就会触发想要避免的话就是不要弄太多的临时变量不用了就会被回收',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-04-06 21:25:28',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://npm.elemecdn.com/anzhiyu-blog-static@1.0.4/img/avatar.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><a id="site-name" href="/" accesskey="h"><div class="title">kitty</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a><div id="he-plugin-simple"></div><script>var WIDGET = {
+  "CONFIG": {
+    "modules": "0124",
+    "background": "2",
+    "tmpColor": "FFFFFF",
+    "tmpSize": "16",
+    "cityColor": "FFFFFF",
+    "citySize": "16",
+    "aqiColor": "E8D87B",
+    "aqiSize": "16",
+    "weatherIconSize": "24",
+    "alertIconSize": "18",
+    "padding": "10px 10px 10px 10px",
+    "shadow": "0",
+    "language": "auto",
+    "borderRadius": "20",
+    "fixed": "true",
+    "vertical": "top",
+    "horizontal": "left",
+    "left": "20",
+    "top": "7.1",
+    "key": "df245676fb434a0691ead1c63341cd94"
+  }
+}
+</script><link rel="stylesheet" href="https://widget.qweather.net/simple/static/css/he-simple.css?v=1.4.0"/><script src="https://widget.qweather.net/simple/static/js/he-simple.js?v=1.4.0"></script></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 总览</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 收藏网站</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button only-home" id="travellings_button" title="随机前往一个开往项目网站"><a class="site-page" onclick="anzhiyu.totraveling()" title="随机前往一个开往项目网站" href="javascript:void(0);" rel="external nofollow" data-pjax-state="external"><i class="anzhiyufont anzhiyu-icon-train"></i></a></div><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> Newest Comments</span></div><div class="aside-list"><span>loading...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/JavaScript/" style="font-size: 1.05rem;">JavaScript<sup>14</sup></a><a href="/tags/Promise/" style="font-size: 1.05rem;">Promise<sup>1</sup></a><a href="/tags/vite/" style="font-size: 1.05rem;">vite<sup>2</sup></a><a href="/tags/vue/" style="font-size: 1.05rem;">vue<sup>4</sup></a><a href="/tags/%E5%88%86%E4%BA%AB/" style="font-size: 1.05rem;">分享<sup>2</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 1.05rem;">学习笔记<sup>7</sup></a><a href="/tags/%E5%B7%A5%E4%BD%9C/" style="font-size: 1.05rem;">工作<sup>5</sup></a><a href="/tags/%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87/" style="font-size: 1.05rem;">性能提升<sup>1</sup></a><a href="/tags/%E6%8A%80%E6%9C%AF%E6%8F%90%E5%8D%87/" style="font-size: 1.05rem;">技术提升<sup>1</sup></a><a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">浏览器相关<sup>3</sup></a><a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 1.05rem;">源码<sup>2</sup></a><a href="/tags/%E8%84%9A%E6%89%8B%E6%9E%B6/" style="font-size: 1.05rem;">脚手架<sup>2</sup></a><a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.05rem;">设计模式<sup>1</sup></a><a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 1.05rem;">面试<sup>3</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="More">
+    <i class="anzhiyufont anzhiyu-icon-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/04/"><span class="card-archive-list-date">April 2025</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/03/"><span class="card-archive-list-date">March 2025</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/02/"><span class="card-archive-list-date">February 2025</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">6</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/11/"><span class="card-archive-list-date">November 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/09/"><span class="card-archive-list-date">September 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/08/"><span class="card-archive-list-date">August 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">4</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/07/"><span class="card-archive-list-date">July 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">June 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80/" itemprop="url">前端基础</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/JavaScript/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>JavaScript</span></a><a class="article-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>学习笔记</span></a></span></div></div><h1 class="post-title" itemprop="name headline">4.变量、作用域与内存</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">创建时间</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2024-08-12T15:20:00.000Z" title="创建时间 2024-08-12 23:20:00">2024-08-12</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新时间</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2025-04-06T13:25:28.640Z" title="更新时间 2025-04-06 21:25:28">2025-04-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数:</span><span class="word-count" title="文章字数">5.8k</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">预计阅读:</span><span>19分钟</span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为广州"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>广州</span></div></div></div><article class="post-content" id="article-container" itemscope itemtype="http://example.com/2024/08/12/JavaScript/4.%E5%8F%98%E9%87%8F%E3%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98/"><header><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80/" itemprop="url">前端基础</a><a href="/tags/JavaScript/" tabindex="-1" itemprop="url">JavaScript</a><a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" tabindex="-1" itemprop="url">学习笔记</a><h1 id="CrawlerTitle" itemprop="name headline">4.变量、作用域与内存</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">kitty</span><time itemprop="dateCreated datePublished" datetime="2024-08-12T15:20:00.000Z" title="创建时间 2024-08-12 23:20:00">2024-08-12</time><time itemprop="dateCreated datePublished" datetime="2025-04-06T13:25:28.640Z" title="更新时间 2025-04-06 21:25:28">2025-04-06</time></header><h2 id="原始值与引用值"><a href="#原始值与引用值" class="headerlink" title="原始值与引用值"></a>原始值与引用值</h2><p>原始值：</p>
+<ul>
+<li><font style="background-color:#FBDE28;">最简单的数据</font></li>
+<li>Undefined,null,boolean,number,string,symbol 六种 一般放在栈中</li>
+<li>保存原始值的变量是按值访问，操作的是<font style="background-color:#FBDE28;">存储在变量中的实际值</font></li>
+</ul>
+<p>引用值：</p>
+<ul>
+<li><font style="background-color:#FBDE28;">多个值构成的</font>，保存在内存中的对象</li>
+<li>操作对象时，实际上操作的是该对象的<font style="background-color:#FBDE28;">引用而非实际对象本身</font></li>
+<li>保存引用值的变量是按引用访问的</li>
+</ul>
+<h3 id="复制值"><a href="#复制值" class="headerlink" title="复制值"></a>复制值</h3><p>原始值上 复制值与被复制 两个变量都是独立的</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/8521f942ff3478bba77bf04921471a0d.jpeg" alt="画板"></p>
+<p>引用值上 复制的值是一个<font style="background-color:#FBDE28;">指针</font>，指向存储的<font style="background-color:#FBDE28;">堆内存</font>中的对象，实际上两个变量指的是<font style="background-color:#FBDE28;">同一个对象</font></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/b8398d4046956fb9b104ce5f94ce2a77.jpeg" alt="画板"></p>
+<h3 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h3><p>所有的函数参数都是按值传递的，意味着函数外的值会被复制到函数内部的函数中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">setName</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  obj.<span class="property">name</span> = <span class="string">&quot;Nicholas&quot;</span>;</span><br><span class="line">  obj = <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">  obj.<span class="property">name</span> = <span class="string">&quot;Greg&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line"><span class="title function_">setName</span>(person);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">name</span>); <span class="comment">// &quot;Nicholas&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>表明函数中参数的值改变后，原始的引用仍然没变</p>
+<p>当 obj 函数内部被重写时，它变成一个指向本地对象的指针，而那个本地对象在函数执行结束时已被摧毁</p>
+<h2 id="垃圾产生"><a href="#垃圾产生" class="headerlink" title="垃圾产生"></a>垃圾产生</h2><p>JS 的引用数据类型是存在堆中，然后在栈内存中保存一个堆内存中实际对象的引用</p>
+<p>栈内存中保存了一个地址，这个地址和堆内存中实际值是相关的</p>
+<p>垃圾产生的原因是因为引用数据类型发生了重新赋值的过程中，失去了与上一个对象的引用关系，一多就爆内存</p>
+<h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><p>JS 是使用垃圾回收的语言，是执行环境负责在代码执行时管理内存。<font style="background-color:#FBDE28;">通过自动内存管理实现内存分配和闲置资源回收</font></p>
+<p>离开作用域的值会被自动标记为可回收，然后在垃圾回收期间被删除</p>
+<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>确定哪个变量不会再使用，然后释放它占用的内存。整个过程是周期性的，隔一段时间就自动运行</p>
+<div class="note info no-icon flat"><p>函数中的局部变量会在函数执行时存在，栈（或 堆）内存会分配空间以保存相应的值。函数在内部使用了变量，然后退出。此时，就不再需要那个局部变量了，它占用的内存可以释放，供后面使用</p>
+</div>
+
+<p>垃圾回收程序如何判断哪些变量不会再使用？</p>
+<h3 id="标记清理"><a href="#标记清理" class="headerlink" title="标记清理"></a>标记清理</h3><p>变量进入上下文(作用域)，比如在函数内部声明一个变量，该变量会被加上存在于上下文中的标记，当变量离开上下文时，会被加上离开的标记</p>
+<p>标记过程的实现并不重要，关键是策略</p>
+<ul>
+<li>垃圾回收程序运行时，会标记<font style="background-color:#FBDE28;">内存中所有变量，默认全是垃圾</font></li>
+<li>将所有在上下文中的变量、被在上下文中变量引用的变量标记去掉，把不是垃圾的改成 1，在此之后再被加上标记的就是待删除的，</li>
+<li><font style="background-color:#FBDE28;">因为任何上下文中的变量都访问不到它们(此时已经离开上下文)</font>了，随后垃圾回收程序做一次内存清理销毁带标记的所有值并收回内存</li>
+</ul>
+<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><p>实现简单 用二进制就可以标记</p>
+<h4 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h4><ul>
+<li>内存碎片：清除后，剩余的对象内存位置不变会导致空闲内存空间不连续，出现内存碎片，<font style="color:rgb(37, 41, 51);">能会出现分配所需内存过大的对象时找不到合适的块</font></li>
+<li><font style="color:rgb(37, 41, 51);">分配速度慢：操作仍是一个 O(n)，大对象的分配效率会更慢</font></li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/6f8ce92159a482f6ce9c6f6274ec34ef.webp"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/3fd84fb3e3bfa56cd50a7e116fee924a.webp"></p>
+<h4 id="如何找到合适的块？"><a href="#如何找到合适的块？" class="headerlink" title="如何找到合适的块？"></a>如何找到合适的块？</h4><ul>
+<li><code>First-fit</code>，找到大于等于 <code>size</code> 的块立即返回(推荐)</li>
+<li><code>Best-fit</code>，遍历整个空闲列表，返回大于等于 <code>size</code> 的最小分块</li>
+<li><code>Worst-fit</code>，遍历整个空闲列表，找到最大的分块，然后切成两部分，一部分 <code>size</code> 大小，并将该部分返回(不推荐)</li>
+</ul>
+<h4 id="缺点补充-标记整理"><a href="#缺点补充-标记整理" class="headerlink" title="缺点补充-标记整理"></a>缺点补充-标记整理</h4><p>标记结束后，标记整理算法会将不需要清理的对象向内存的一端移动，最后清理掉边界的内存</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/691ec07ef334708d7325246c8256c263.webp"></p>
+<h3 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h3><p>对每个值都记录被引用的次数，被引用+1 被覆盖-1 为 0 代表无法再访问到，此时可以收回内存</p>
+<h4 id="产生的问题："><a href="#产生的问题：" class="headerlink" title="产生的问题："></a>产生的问题：</h4><ul>
+<li>循环引用：对象 A 有一个指针指向对象 B，而对象 B 也引用了对象 A</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">problem</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> objectA = <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">  <span class="keyword">let</span> objectB = <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">  objectA.<span class="property">someOtherObject</span> = objectB;</span><br><span class="line">  objectB.<span class="property">anotherObject</span> = objectA;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 用引用计数 两个obj都是2</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>JavaScript 引擎不再使用这种算法，但某些旧版本的 IE 仍然会受这种算法的影响，原因是 JavaScript 会访问非原生 JavaScript 对象 如 DOM 元素 设置为 null 才能切断关系</li>
+<li>但是 ie9 就把 DOM 和ＯＭ给换成 JS 对象 ， 这同时也避免了由于存在两套垃圾回收算法而导致的问题，还消除了常见的内存泄漏现象</li>
+</ul>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>引用计数在引用为 0 时，就立刻被回收</p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><p>需要个计数器，无法解决循环引用无法回收的问题</p>
+<h3 id="对垃圾回收的优化"><a href="#对垃圾回收的优化" class="headerlink" title="对垃圾回收的优化"></a>对垃圾回收的优化</h3><h4 id="分代式垃圾回收机制"><a href="#分代式垃圾回收机制" class="headerlink" title="分代式垃圾回收机制"></a>分代式垃圾回收机制</h4><h5 id="新老生代"><a href="#新老生代" class="headerlink" title="新老生代"></a>新老生代</h5><p>新生代的对象为存活时间短的对象&#x3D;&gt;新产生的对象一般只 1-8M 的容量</p>
+<p>老生代为存活时间较长或常驻内存的对象，经历过新生代垃圾回收后存活下来的对象，容量通常比较大</p>
+<p>两个生代垃圾回收器不同</p>
+<h5 id="新生代垃圾回收"><a href="#新生代垃圾回收" class="headerlink" title="新生代垃圾回收"></a>新生代垃圾回收</h5><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/b3355ced013faf2443d4dbef060010c1.webp"></p>
+<p>新加入的对象会存放到使用区，当使用区快写满时，需要执行一次垃圾清理</p>
+<p><strong><font style="color:#DF2A3F;">如何进行垃圾操作？</font></strong></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/81e4b6b6e73162d86d2507d93c69054c.jpeg" alt="画板"></p>
+<ul>
+<li>新生代垃圾回收器对<font style="background-color:#E8F7CF;">使用区</font>中的活动对象做标记</li>
+<li>标记成功后将<font style="background-color:#E8F7CF;">使用区</font>的活动对象复制到<font style="background-color:#E8F7CF;">空闲区</font>+排序</li>
+<li>清理阶段-将非活动对象占用空间清理</li>
+<li>将使用区变空闲区，空闲区变使用区</li>
+</ul>
+<div class="note info no-icon flat"><p>如果一个对象经过多次复制还存活&#x3D;&gt;生命周期较长对象&#x3D;&gt;移到老生代</p>
+<p>对象太大影响后期内存分配&#x3D;&gt;移到老生代</p>
+</div>
+
+<h5 id="并行回收"><a href="#并行回收" class="headerlink" title="并行回收"></a>并行回收</h5><p>全停顿：JS 是一门单线程语言，是运行在主线程上的，在进行垃圾回收时会堵塞 JS 脚本的执行。需要等待垃圾回收完后再恢复运行</p>
+<p>如果一次垃圾回收需要 20ms 那应用逻辑就得停 20ms，时间过长可能会造成页面卡顿的问题</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/ef19b602970448d9cd206f37807ce27b.webp"></p>
+<p>并行回收：叫上两个辅助线程和主线程一起干活，但是主线程还是需要让出来的，只是时间变短了，<font style="color:rgb(37, 41, 51);">这个过程内存是静态的，不需要考虑内存中对象的引用关系改变，只需要考虑协同</font></p>
+<div class="note info no-icon flat"><p><font style="color:rgb(37, 41, 51);">新生代对象空间就采用并行策略</font></p>
+<p><font style="color:rgb(37, 41, 51);">在执行垃圾回收的过程中，会启动了多个线程来负责新生代中的垃圾清理操作</font></p>
+<p><font style="color:rgb(37, 41, 51);">这些线程同时将对象空间中的数据移动到空闲区域，这个过程中由于数据地址会发生改变</font></p>
+<p><font style="color:rgb(37, 41, 51);">所以还需要同步更新引用这些对象的指针，此即并行回收</font></p>
+</div>
+
+<h5 id="老生代垃圾回收"><a href="#老生代垃圾回收" class="headerlink" title="老生代垃圾回收"></a>老生代垃圾回收</h5><p>用的标记清除算法，因为老生代中的对象通常比较大，用新生代的处理方式耗时</p>
+<p>从一组根元素开始，递归遍历这组根元素，遍历过程中能到达的元素&#x3D;&gt;活动对象，没达到&#x3D;&gt;非活动对象，直接清非活动对象，V8 会使用标记整理算法来优化空间</p>
+<div class="note info no-icon flat"><p>主要是使用并发标记</p>
+<p>标记完成后，再执行并行清理</p>
+<p>清理任务会采用增量方式分批在各个 JS 任务之间执行</p>
+</div>
+
+<h5 id="为什么需要分代式？"><a href="#为什么需要分代式？" class="headerlink" title="为什么需要分代式？"></a>为什么需要分代式？</h5><p><font style="color:rgb(37, 41, 51);">把一些新、小、存活时间短的对象作为新生代，采用一小块内存频率较高的快速清理</font></p>
+<p><font style="color:rgb(37, 41, 51);">而一些大、老、存活时间长的对象作为老生代，使其很少接受检查</font></p>
+<p>新老生代回收机制及频率不同，此机制出现很大程度<font style="background-color:#FBDE28;">提高了垃圾回收机制的效率</font></p>
+<h4 id="增量标记与懒性清理"><a href="#增量标记与懒性清理" class="headerlink" title="增量标记与懒性清理"></a>增量标记与懒性清理</h4><p>并行策略虽然好，但它还是<font style="background-color:#E8F7CF;">全停顿式</font>的，对于老生代来说如果对象太大，那还是会消耗大量的时间，所以Ｖ８将<font style="background-color:#FBDE28;">全停顿标记切换成增量标记</font></p>
+<h5 id="增量"><a href="#增量" class="headerlink" title="增量"></a>增量</h5><p>将一次 GC 标记的过程分成<font style="background-color:#E8F7CF;">多个小步</font>，每执行完一小步就停一会，让应用逻辑执行一会，交替着来完成一轮 GC 标记</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/c116b3c8d71516f94ecb6987916f2317.webp"></p>
+<p>每小次 GC 标记完后如何暂停下去执行任务，又如何恢复的，如果在暂停标记的后，将标记好的对象引用关系修改了又咋办？</p>
+<h5 id="三色标记法"><a href="#三色标记法" class="headerlink" title="三色标记法"></a>三色标记法</h5><h6 id="背景："><a href="#背景：" class="headerlink" title="背景："></a>背景：</h6><div class="note info no-icon flat"><p>老生代采用的标记清理算法，在没有增量算法之前，单纯使用黑色和白色来标记</p>
+<p>垃圾回收器将所有的数据置白色-&gt;垃圾回收器将所有访问到的数据标为黑色-&gt;标记为黑色的数据对象是活动对象，剩余白色是带清理的垃圾对象</p>
+<p>但是这种标记法，在垃圾回收器执行了一段增量回收后，暂停后启动主线程执行了应用程序中的一段 JS 代码，垃圾回收器再次被启动，这时内存中黑白色都有，无法得知下一步走到哪里</p>
+</div>
+
+<ul>
+<li><font style="color:rgb(37, 41, 51);">白色指的是未被标记的对象</font></li>
+<li><font style="color:rgb(37, 41, 51);">灰色指自身被标记，成员变量（该对象的引用对象）未被标记</font></li>
+<li><font style="color:rgb(37, 41, 51);">黑色指自身和成员变量皆被标记</font></li>
+<li><font style="color:rgb(37, 41, 51);">从白-&gt;灰-&gt;黑</font></li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/3c9680ffa56a87c7c862c5d2f75a4f11.webp"></p>
+<p>有灰色标记，恢复时直接从灰色阶段开始继续执行</p>
+<p>无灰色标记直接进入清理阶段</p>
+<h6 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h6><div class="note info no-icon flat"><p>不需每次都扫描整个内存空间。可以很好的配合增量回收进行暂停恢复的操作，减少全停顿时间</p>
+</div>
+
+<h5 id="写屏障"><a href="#写屏障" class="headerlink" title="写屏障"></a>写屏障</h5><h6 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h6><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/10f77daf922bbfe3a508601fd75772b0.webp"></p>
+<div class="note info no-icon flat"><p>在增量中修改引用，比如ＡＢ C 都要清理了，突然有了新引用，但是 B 要被回收了，后面的程序还要用到 D，就不对了</p>
+</div>
+
+<p>一旦有黑色对象引用白色对象，该机制会强制将引用的白色对象改为灰色，保证下一次增量 GC 标记阶段可以正确标记＝＞强三色不变性即 D 强制改为灰色</p>
+<h5 id="惰性清理"><a href="#惰性清理" class="headerlink" title="惰性清理"></a>惰性清理</h5><p>对活动对象和非活动对象做标记，对真正的清理释放内存 V ８采用的惰性清理</p>
+<ul>
+<li>增量标记完后，假如当前的可用内存足以让我们执行代码，那是不需要立刻清理内存</li>
+<li>将清理程序延迟一下，也无需一次性清理完所有的非活动对象内存，可以按需逐一进行清理直到所有的非活动对象内存清理完毕，后面再执行增量标记</li>
+</ul>
+<h5 id="增量标记与惰性清理优缺"><a href="#增量标记与惰性清理优缺" class="headerlink" title="增量标记与惰性清理优缺"></a>增量标记与惰性清理优缺</h5><h6 id="优"><a href="#优" class="headerlink" title="优"></a>优</h6><ul>
+<li>主线程停顿时间大大减少</li>
+<li>让用于与浏览器交互过程变流畅</li>
+</ul>
+<h6 id="缺"><a href="#缺" class="headerlink" title="缺"></a>缺</h6><ul>
+<li>没有减少主线程总暂停时间甚至稍微增加</li>
+<li>写屏障机制成本</li>
+<li>增量标记可能会降低应用程序的吞吐量</li>
+</ul>
+<h5 id="并发回收"><a href="#并发回收" class="headerlink" title="并发回收"></a>并发回收</h5><p>因为并行回收会阻塞主线程，增量标记同样增加了总暂停时间</p>
+<p>在主线程执行 JS 过程中，辅助线程能够在后台完成执行垃圾回收的操作，辅助线程在执行垃圾回收时主线程可以自由执行不被挂起</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/../../images/17789b96c3b1897d2706d5022d3ef89a.webp"></p>
+<h6 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h6><p>需要考虑主线程在执行 JS 时，堆中对象引用关系随时都有可能变化，这时辅助线程之前做的标记或者正在进行的标记也会改变，所以需要实现一些读写锁来控制</p>
+<h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><ul>
+<li>以前调度垃圾回收程序的策略</li>
+</ul>
+<p>是根据分配数比如 256 个变量或 64kb 字符串，只要满足某个条件，垃圾回收程序就会运行但是问题在于，其整个生命周期内始终需要那么多变量，结果就会导致垃圾回收程序过于频繁地运行</p>
+<ul>
+<li>现在改为动态改变分配变量、字面量或数组槽位等会触发垃圾回收的阈值</li>
+</ul>
+<p>如果垃圾回收程序回收的内存不到已分配的 15%， 这些变量、字面量或数组槽位的阈值就会翻倍。如果有一次回收的内存达到已分配的 85%，则阈值重置为默认值</p>
+<h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><p>JS 的运行是在一个内存管理和垃圾回收都特殊的环境，浏览器的内存通常分配的比较少，所以为了避免运行大量 JS 的网页耗尽系统内存而导致操作系统崩溃，需要将内存占用量保持在一个较小的值</p>
+<h4 id="1-保证只保存必要的数据"><a href="#1-保证只保存必要的数据" class="headerlink" title="1.保证只保存必要的数据"></a>1.保证只保存必要的数据</h4><p>接触引用：如果数据不再必要，设置为 null，释放其引用，局部变量在超出作用域后会被自动解除引用</p>
+<p><font style="background-color:#FBDE28;">适合全局变量和全局对象的属性</font></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">createPerson</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> localPerson = <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">  localPerson.<span class="property">name</span> = name;</span><br><span class="line">  <span class="keyword">return</span> localPerson;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// localPerson执行完会自动解除引用</span></span><br><span class="line"><span class="comment">// globalPerson是全局变量 需要手动</span></span><br><span class="line"><span class="keyword">let</span> globalPerson = <span class="title function_">createPerson</span>(<span class="string">&quot;Nicholas&quot;</span>);</span><br><span class="line"><span class="comment">// 解除 globalPerson 对值的引用</span></span><br><span class="line">globalPerson = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>解除对一个值引用不会自动导致相关内存被回收</p>
+<h4 id="2-通过-const-和-let-声明提升性能"><a href="#2-通过-const-和-let-声明提升性能" class="headerlink" title="2.通过 const 和 let 声明提升性能"></a>2.通过 const 和 let 声明提升性能</h4><p>因为都以块为作用域，相比起 var，使用这两个新关键字可能会更早地让垃圾回收程序介入，尽早回收应该回收的内存</p>
+<h4 id="3-隐藏类和删除操作"><a href="#3-隐藏类和删除操作" class="headerlink" title="3.隐藏类和删除操作"></a>3.隐藏类和删除操作</h4><p>浏览器运行期间，浏览器会将创建的对象与隐藏类关联起来，以追踪它们的属性特征，共享相同隐藏类的对象性能会更好</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Article</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">title</span> = <span class="string">&quot;Inauguration Ceremony Features Kazoo Band&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> a1 = <span class="keyword">new</span> <span class="title class_">Article</span>();</span><br><span class="line"><span class="keyword">let</span> a2 = <span class="keyword">new</span> <span class="title class_">Article</span>();</span><br><span class="line"><span class="comment">// 这种情况下，V8会在后台配置让这两个类实例共享相同的隐藏类，因为这两个实例共享同一个构造函数和原型</span></span><br><span class="line"><span class="comment">// 假设再添加</span></span><br><span class="line">a2.<span class="property">name</span> = <span class="string">&quot;kitty&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>此时两个实例就会对应两个不同的隐藏类，对性能产生明显影响</p>
+<p>可以先创建后补充</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Article</span>(<span class="params">opt_author</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">title</span> = <span class="string">&quot;Inauguration Ceremony Features Kazoo Band&quot;</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">author</span> = opt_author;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> a1 = <span class="keyword">new</span> <span class="title class_">Article</span>();</span><br><span class="line"><span class="keyword">let</span> a2 = <span class="keyword">new</span> <span class="title class_">Article</span>(<span class="string">&quot;Jake&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Article</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">title</span> = <span class="string">&quot;Inauguration Ceremony Features Kazoo Band&quot;</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">author</span> = <span class="string">&quot;Jake&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> a1 = <span class="keyword">new</span> <span class="title class_">Article</span>();</span><br><span class="line"><span class="keyword">let</span> a2 = <span class="keyword">new</span> <span class="title class_">Article</span>();</span><br><span class="line"><span class="keyword">delete</span> a1.<span class="property">author</span>; <span class="comment">//使用delete关键字会导致生成相同的隐藏类片段</span></span><br><span class="line">a1.<span class="property">author</span> = <span class="literal">null</span>; <span class="comment">// 最好是改成这样</span></span><br><span class="line"><span class="comment">// 保持隐藏类不变和继续共享，同时也能达到删除引用值供垃圾回收程序回收的效果</span></span><br></pre></td></tr></table></figure>
+
+<p>动态删除属性与动态添加属性导致的后果一样</p>
+<h4 id="4-内存泄漏"><a href="#4-内存泄漏" class="headerlink" title="4.内存泄漏"></a>4.内存泄漏</h4><p>当不再用到的对象内存没有及时被回收</p>
+<h5 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h5><p>在没有任何关键字声明的变量，解释器会把变量 name 当作 window 的属性来创建，这样 window 不被清理就不会消失，所以需要加 let const 关键字</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">setName</span>(<span class="params"></span>) &#123;</span><br><span class="line">  name = <span class="string">&quot;Jake&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定时器的回调通过闭包引用了外部变量</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">&quot;Jake&quot;</span>;</span><br><span class="line"><span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(name);</span><br><span class="line">&#125;, <span class="number">100</span>);</span><br><span class="line"><span class="comment">// 只要定时器一直运行，回调函数中引用的 name 就会一直占用内存</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> outer = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> name = <span class="string">&quot;Jake&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> name;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> outer1 = <span class="title function_">outer</span>();</span><br><span class="line"><span class="title function_">outer1</span>();</span><br><span class="line"><span class="comment">// 把外部的引用关系置空 才不会造成内存泄漏</span></span><br><span class="line">outer1 = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>调用 outer()会导致分配给 name 的内存被泄漏</p>
+<p>以上代码执行后创建了一个内部闭包，只要返回的函数存在就不能清理 <font style="background-color:#E8F7CF;">name</font>，因为闭包一直在引用着它</p>
+<h4 id="游离-DOM-引用"><a href="#游离-DOM-引用" class="headerlink" title="游离 DOM 引用"></a>游离 DOM 引用</h4><p><font style="color:rgb(37, 41, 51);">我们代码中进行 DOM 时会使用变量缓存 DOM 节点的引用</font></p>
+<p><font style="color:rgb(37, 41, 51);">移除节点的时候，我们应该同步释放缓存的引用，否则游离的子树无法释放</font></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=<span class="string">&quot;root&quot;</span>&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;ul&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">&quot;li3&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">&lt;/div&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">let</span> root = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#root&#x27;</span>)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">let</span> ul = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#ul&#x27;</span>)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">let</span> li3 = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#li3&#x27;</span>)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="comment">// 由于ul变量存在，整个ul及其子元素都不能GC</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  root.<span class="title function_">removeChild</span>(ul)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="comment">// 虽置空了ul变量，但由于li3变量引用ul的子节点，所以ul元素依然不能被GC</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="comment">// 父节点置空.但是被删除的父节点其子节点引用也缓存在变量中,那么会导致整个父节点树下整个游离节点树无法清理</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  ul = <span class="literal">null</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="comment">// 解决方法就是将子节点的变量也置空</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="comment">// 已无变量引用，此时可以GC</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  li3 = <span class="literal">null</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="遗忘的定时器"><a href="#遗忘的定时器" class="headerlink" title="遗忘的定时器"></a>遗忘的定时器</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取数据</span></span><br><span class="line"><span class="keyword">let</span> someResource = <span class="title function_">getData</span>()</span><br><span class="line"><span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> node = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;Node&#x27;</span>)</span><br><span class="line">	<span class="keyword">if</span>(node) &#123;</span><br><span class="line">    node.<span class="property">innerHTML</span> = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(someResource))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>只有当定时器结束后 执行<font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">clearInterval ,clearTimeout</font>才会被回收,没有被 clear 会造成内存泄漏</p>
+<h4 id="遗忘的事件监听器"><a href="#遗忘的事件监听器" class="headerlink" title="遗忘的事件监听器"></a>遗忘的事件监听器</h4><p>当事件监听器在组件内挂载相关的事件处理函数</p>
+<p>而在组件销毁时不主动将其清除</p>
+<p>其中引用的变量或函数都被认为是需要的而不会被回收</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="title function_">created</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;resize&quot;</span>, <span class="variable language_">this</span>.<span class="property">doSomething</span>)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="comment">// 需要在销毁的时候注销</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="title function_">beforeDestroy</span>(<span class="params"></span>)&#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="variable language_">window</span>.<span class="title function_">removeEventListener</span>(<span class="string">&quot;resize&quot;</span>, <span class="variable language_">this</span>.<span class="property">doSomething</span>)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">methods</span>: &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="title function_">doSomething</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// do something</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="遗忘的监听者模式"><a href="#遗忘的监听者模式" class="headerlink" title="遗忘的监听者模式"></a>遗忘的监听者模式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="title function_">created</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    eventBus.<span class="title function_">on</span>(<span class="string">&quot;test&quot;</span>, <span class="variable language_">this</span>.<span class="property">doSomething</span>)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="title function_">beforeDestroy</span>(<span class="params"></span>)&#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    eventBus.<span class="title function_">off</span>(<span class="string">&quot;test&quot;</span>, <span class="variable language_">this</span>.<span class="property">doSomething</span>)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">methods</span>: &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="title function_">doSomething</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="comment">// do something</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="遗忘的-Map-Set-对象"><a href="#遗忘的-Map-Set-对象" class="headerlink" title="遗忘的 Map,Set 对象"></a>遗忘的 Map,Set 对象</h4><p>使用 Map 或 Set 存储对象,同 Obj 都是强引用</p>
+<p>JS 垃圾回收机制是如果我们持有一个对象的引用,那么这个对象就不会被垃圾回收,指的是<font style="background-color:#E8F7CF;">强引用</font></p>
+<p>如果需要使用<font style="background-color:#E8F7CF;">Set 或者 Map</font>,可以采用<font style="background-color:#E8F7CF;">weakSet 或者 weakMap</font>,只允许存储对象弱引用的唯一值,不会干扰 JS 的垃圾回收</p>
+<p><font style="background-color:#E8F7CF;">弱引用</font>指的是一个对象若只被弱引用所引用，则被认为是不可访问的，因此可能在任何时刻被回收</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// obj是一个强引用，对象存于内存，可用</span></span><br><span class="line"><span class="keyword">let</span> obj = &#123; <span class="attr">id</span>: <span class="number">1</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重写obj引用</span></span><br><span class="line">obj = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// 对象从内存移除，回收 &#123;id: 1&#125; 对象</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> obj = &#123; <span class="attr">id</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="keyword">let</span> user = &#123; <span class="attr">info</span>: obj &#125;;</span><br><span class="line"><span class="keyword">let</span> set = <span class="keyword">new</span> <span class="title class_">Set</span>([obj]);</span><br><span class="line"><span class="keyword">let</span> map = <span class="keyword">new</span> <span class="title class_">Map</span>([[obj, <span class="string">&quot;hahaha&quot;</span>]]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重写obj</span></span><br><span class="line">obj = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user.<span class="property">info</span>); <span class="comment">// &#123;id: 1&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(set);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(map);</span><br><span class="line"><span class="comment">//即使obj=null 但是user set map都强引用了它,所以还能获得到&#123;id:1&#125;</span></span><br><span class="line"><span class="comment">// 需要将所有引用都清空</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123; <span class="attr">id</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="keyword">let</span> weakSet = <span class="keyword">new</span> <span class="title class_">WeakSet</span>([obj]);</span><br><span class="line"><span class="keyword">let</span> weakMap = <span class="keyword">new</span> <span class="title class_">WeakMap</span>([[obj, <span class="string">&quot;hahaha&quot;</span>]]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重写obj引用</span></span><br><span class="line">obj = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;id: 1&#125; 将在下一次 GC 中从内存中删除</span></span><br><span class="line"><span class="comment">// 使用了WeakMap以及WeakSet即为弱引用,将obj引用置为null后,对象&#123;id:1&#125;将在下一次GC中清理出内存</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="未清理的-Console-输出"><a href="#未清理的-Console-输出" class="headerlink" title="未清理的 Console 输出"></a>未清理的 Console 输出</h4><p>可以在控制台看到数据输出,是因为浏览器保存了我们输出对象的信息数据引用</p>
+<h4 id="内存泄漏排查-定位和修复"><a href="#内存泄漏排查-定位和修复" class="headerlink" title="内存泄漏排查,定位和修复"></a>内存泄漏排查,定位和修复</h4><p>具体看</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6984188410659340324">「硬核 JS」你的程序中可能存在内存泄漏 - 掘金 (juejin.cn)</a></p>
+<h4 id="5-静态分配与对象池"><a href="#5-静态分配与对象池" class="headerlink" title="5.静态分配与对象池"></a>5.静态分配与对象池</h4><p>压榨浏览器减少浏览器执行垃圾回收的次数，合理使用分配的内存</p>
+<ul>
+<li>不要过度动态创建矢量对象</li>
+</ul>
+<p>对象更替的速度是运行垃圾回收程序的一个标准</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">addVector</span>(<span class="params">a, b</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> resultant = <span class="keyword">new</span> <span class="title class_">Vector</span>(); <span class="comment">//创建一个新对象然后修改-&gt;返回</span></span><br><span class="line">  resultant.<span class="property">x</span> = a.<span class="property">x</span> + b.<span class="property">x</span>;</span><br><span class="line">  resultant.<span class="property">y</span> = a.<span class="property">y</span> + b.<span class="property">y</span>;</span><br><span class="line">  <span class="keyword">return</span> resultant;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><font style="background-color:#E8F7CF;">resultant</font> 生命周期很短，很快失去所有对它的引用，成为可以被回收的值</p>
+<p>如果被频繁的调用那么回收程序会发现对象更替的<font style="background-color:#FBDE28;">速度很快</font>，从而更频繁地安排回收</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">addVector</span>(<span class="params">a, b, resultant</span>) &#123;</span><br><span class="line">  resultant.<span class="property">x</span> = a.<span class="property">x</span> + b.<span class="property">x</span>;</span><br><span class="line">  resultant.<span class="property">y</span> = a.<span class="property">y</span> + b.<span class="property">y</span>;</span><br><span class="line">  <span class="keyword">return</span> resultant; <span class="comment">// 改为已有的矢量对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果需要在其他地方实例化矢量 <font style="background-color:#E8F7CF;">resultant</font> ，<font style="background-color:#E8F7CF;">addVector</font>的行为没有变可以考虑用<font style="background-color:#FBDE28;">对象池</font>进行创建</p>
+<h5 id="对象池"><a href="#对象池" class="headerlink" title="对象池"></a>对象池</h5><ul>
+<li>在初始化时，创建一个对象池用来管理一组可回收的对象</li>
+<li>应用程序可以向该对象池请求一个对象设置属性使用</li>
+<li>操作完成后再还给对象池</li>
+<li>因为没发生对象初始化，垃圾回收检测不会发现有对象更替</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vectorPool 是已有的对象池</span></span><br><span class="line"><span class="keyword">let</span> v1 = vectorPool.<span class="title function_">allocate</span>();</span><br><span class="line"><span class="keyword">let</span> v2 = vectorPool.<span class="title function_">allocate</span>();</span><br><span class="line"><span class="keyword">let</span> v3 = vectorPool.<span class="title function_">allocate</span>();</span><br><span class="line">v1.<span class="property">x</span> = <span class="number">10</span>;</span><br><span class="line">v1.<span class="property">y</span> = <span class="number">5</span>;</span><br><span class="line">v2.<span class="property">x</span> = -<span class="number">3</span>;</span><br><span class="line">v2.<span class="property">y</span> = -<span class="number">6</span>;</span><br><span class="line"><span class="title function_">addVector</span>(v1, v2, v3);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([v3.<span class="property">x</span>, v3.<span class="property">y</span>]); <span class="comment">// [7, -1]</span></span><br><span class="line">vectorPool.<span class="title function_">free</span>(v1);</span><br><span class="line">vectorPool.<span class="title function_">free</span>(v2);</span><br><span class="line">vectorPool.<span class="title function_">free</span>(v3);</span><br><span class="line"><span class="comment">// 如果对象有属性引用了其他对象</span></span><br><span class="line"><span class="comment">// 则这里也需要把这些属性设置为 null</span></span><br><span class="line">v1 = <span class="literal">null</span>;</span><br><span class="line">v2 = <span class="literal">null</span>;</span><br><span class="line">v3 = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<div class="note info no-icon flat"><p>如果对象池是在对象不存在时创建新的，在对象存在时复用，那么实现的本质是有单调增长但为静态的内存 ，需要使用某种结构维护所有对象用数组比较好</p>
+</div>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> vectorList = <span class="keyword">new</span> <span class="title class_">Array</span>(<span class="number">100</span>);</span><br><span class="line"><span class="keyword">let</span> vector = <span class="keyword">new</span> <span class="title class_">Vector</span>();</span><br><span class="line">vectorList.<span class="title function_">push</span>(vector);</span><br><span class="line"><span class="comment">//这种写法 引擎会先删除大小为100的数组</span></span><br><span class="line"><span class="comment">//然后再创建新的大小为200的数组</span></span><br><span class="line"><span class="comment">//垃圾回收程序看到这个操作 可能很快会过来收垃圾</span></span><br><span class="line"><span class="comment">//在初始化时创建一个大小够用的数组可以避免上述删除再创建的操作</span></span><br></pre></td></tr></table></figure>
+
+<p><font style="background-color:#FBDE28;"> 静态分配是优化的一种极端形式 </font></p>
+<h3 id="内存三大件"><a href="#内存三大件" class="headerlink" title="内存三大件"></a>内存三大件</h3><h5 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h5><p>对象不再使用但是没有被回收,内存没有被释放</p>
+<h5 id="内存膨胀"><a href="#内存膨胀" class="headerlink" title="内存膨胀"></a>内存膨胀</h5><p>短时间内内存占用极速上升到达一个峰值,想要避免需要使用技术手段减少堆内存的占用</p>
+<h5 id="频繁-GC"><a href="#频繁-GC" class="headerlink" title="频繁 GC"></a>频繁 GC</h5><p>GC 执行的特别频繁，一般出现在频繁使用大的临时变量导致新生代空间被装满的速度极快，而每次新生代装满时就会触发 GC,想要避免的话就是不要弄太多的临时变量,不用了就会被回收</p>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/05/67f13aaad4a6e.jpg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/05/67f13aaad4a6e.jpg" title="头像" alt="头像"></a><div class="post-copyright__author_name">kitty</div><div class="post-copyright__author_desc"></div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="http://example.com/2024/08/12/JavaScript/4.%E5%8F%98%E9%87%8F%E3%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('http://example.com/2024/08/12/JavaScript/4.%E5%8F%98%E9%87%8F%E3%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98/')">4.变量、作用域与内存</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="http://example.com/2024/08/12/JavaScript/4.%E5%8F%98%E9%87%8F%E3%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=undefined&amp;url=http://example.com/2024/08/12/JavaScript/4.%E5%8F%98%E9%87%8F%E3%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98/&amp;pic=undefined" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/JavaScript/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>JavaScript<span class="tagsPageCount">14</span></a><a class="post-meta__box__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>学习笔记<span class="tagsPageCount">7</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="https://www.helloimg.com/i/2025/04/06/67f221c28a83b.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/08/07/JavaScript/3.%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f217755d352.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">3.语言基础</div></div></a></div><div class="next-post pull-right"><a href="/2024/09/01/JavaScript/5.%E5%9F%BA%E6%9C%AC%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f217755d352.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">5.基本引用类型</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>相关文章</span></div><div class="relatedPosts-list"><div><a href="/2024/07/23/JavaScript/1.%E4%BB%80%E4%B9%88%E6%98%AFJavaScript/" title="1.什么是JavaScript"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f217755d352.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-07-23</div><div class="title">1.什么是JavaScript</div></div></a></div><div><a href="/2024/07/23/JavaScript/2.HTML%E4%B8%AD%E7%9A%84JavaSctipt/" title="2.HTML中的JavaSctipt"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f217755d352.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-07-23</div><div class="title">2.HTML中的JavaSctipt</div></div></a></div><div><a href="/2024/08/07/JavaScript/3.%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/" title="3.语言基础"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f217755d352.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-08-07</div><div class="title">3.语言基础</div></div></a></div><div><a href="/2024/09/01/JavaScript/5.%E5%9F%BA%E6%9C%AC%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/" title="5.基本引用类型"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f217755d352.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-09-01</div><div class="title">5.基本引用类型</div></div></a></div><div><a href="/2024/11/01/JavaScript/6.%E9%9B%86%E5%90%88%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/" title="6.集合引用类型"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f217755d352.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-11-01</div><div class="title">6.集合引用类型</div></div></a></div><div><a href="/2024/11/11/JavaScript/7.%E8%BF%AD%E4%BB%A3%E5%99%A8%E4%B8%8E%E7%94%9F%E6%88%90%E5%99%A8/" title="7.迭代器与生成器"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f217755d352.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-11-11</div><div class="title">7.迭代器与生成器</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/05/67f13aaad4a6e.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/05/67f13aaad4a6e.jpg" alt="status"/></div></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>和<b style="color:#fff">教程</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">kitty</h1><div class="author-info__desc"></div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/amiaohhhhh" target="_blank" title="Github"></a></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%A7%8B%E5%80%BC%E4%B8%8E%E5%BC%95%E7%94%A8%E5%80%BC"><span class="toc-number">1.</span> <span class="toc-text">原始值与引用值</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E5%80%BC"><span class="toc-number">1.1.</span> <span class="toc-text">复制值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">传递参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E4%BA%A7%E7%94%9F"><span class="toc-number">2.</span> <span class="toc-text">垃圾产生</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-number">3.</span> <span class="toc-text">垃圾回收</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="toc-number">3.1.</span> <span class="toc-text">基本思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E6%B8%85%E7%90%86"><span class="toc-number">3.2.</span> <span class="toc-text">标记清理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%EF%BC%9A"><span class="toc-number">3.2.1.</span> <span class="toc-text">优点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-number">3.2.2.</span> <span class="toc-text">缺点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%89%BE%E5%88%B0%E5%90%88%E9%80%82%E7%9A%84%E5%9D%97%EF%BC%9F"><span class="toc-number">3.2.3.</span> <span class="toc-text">如何找到合适的块？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9%E8%A1%A5%E5%85%85-%E6%A0%87%E8%AE%B0%E6%95%B4%E7%90%86"><span class="toc-number">3.2.4.</span> <span class="toc-text">缺点补充-标记整理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">引用计数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-number">3.3.1.</span> <span class="toc-text">产生的问题：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">3.3.2.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">3.3.3.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9A%84%E4%BC%98%E5%8C%96"><span class="toc-number">3.4.</span> <span class="toc-text">对垃圾回收的优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E4%BB%A3%E5%BC%8F%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">3.4.1.</span> <span class="toc-text">分代式垃圾回收机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%96%B0%E8%80%81%E7%94%9F%E4%BB%A3"><span class="toc-number">3.4.1.1.</span> <span class="toc-text">新老生代</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%96%B0%E7%94%9F%E4%BB%A3%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-number">3.4.1.2.</span> <span class="toc-text">新生代垃圾回收</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E5%9B%9E%E6%94%B6"><span class="toc-number">3.4.1.3.</span> <span class="toc-text">并行回收</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%80%81%E7%94%9F%E4%BB%A3%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-number">3.4.1.4.</span> <span class="toc-text">老生代垃圾回收</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%88%86%E4%BB%A3%E5%BC%8F%EF%BC%9F"><span class="toc-number">3.4.1.5.</span> <span class="toc-text">为什么需要分代式？</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A2%9E%E9%87%8F%E6%A0%87%E8%AE%B0%E4%B8%8E%E6%87%92%E6%80%A7%E6%B8%85%E7%90%86"><span class="toc-number">3.4.2.</span> <span class="toc-text">增量标记与懒性清理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A2%9E%E9%87%8F"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">增量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E6%B3%95"><span class="toc-number">3.4.2.2.</span> <span class="toc-text">三色标记法</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%EF%BC%9A"><span class="toc-number">3.4.2.2.1.</span> <span class="toc-text">背景：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%EF%BC%9A-1"><span class="toc-number">3.4.2.2.2.</span> <span class="toc-text">优点：</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%99%E5%B1%8F%E9%9A%9C"><span class="toc-number">3.4.2.3.</span> <span class="toc-text">写屏障</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">3.4.2.3.1.</span> <span class="toc-text">背景</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%83%B0%E6%80%A7%E6%B8%85%E7%90%86"><span class="toc-number">3.4.2.4.</span> <span class="toc-text">惰性清理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A2%9E%E9%87%8F%E6%A0%87%E8%AE%B0%E4%B8%8E%E6%83%B0%E6%80%A7%E6%B8%85%E7%90%86%E4%BC%98%E7%BC%BA"><span class="toc-number">3.4.2.5.</span> <span class="toc-text">增量标记与惰性清理优缺</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BC%98"><span class="toc-number">3.4.2.5.1.</span> <span class="toc-text">优</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%BC%BA"><span class="toc-number">3.4.2.5.2.</span> <span class="toc-text">缺</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E5%9B%9E%E6%94%B6"><span class="toc-number">3.4.2.6.</span> <span class="toc-text">并发回收</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9-1"><span class="toc-number">3.4.2.6.1.</span> <span class="toc-text">缺点</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD"><span class="toc-number">3.5.</span> <span class="toc-text">性能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">3.6.</span> <span class="toc-text">内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BF%9D%E8%AF%81%E5%8F%AA%E4%BF%9D%E5%AD%98%E5%BF%85%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-number">3.6.1.</span> <span class="toc-text">1.保证只保存必要的数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E9%80%9A%E8%BF%87-const-%E5%92%8C-let-%E5%A3%B0%E6%98%8E%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD"><span class="toc-number">3.6.2.</span> <span class="toc-text">2.通过 const 和 let 声明提升性能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E9%9A%90%E8%97%8F%E7%B1%BB%E5%92%8C%E5%88%A0%E9%99%A4%E6%93%8D%E4%BD%9C"><span class="toc-number">3.6.3.</span> <span class="toc-text">3.隐藏类和删除操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">3.6.4.</span> <span class="toc-text">4.内存泄漏</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">3.6.4.1.</span> <span class="toc-text">全局变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%97%AD%E5%8C%85"><span class="toc-number">3.6.4.2.</span> <span class="toc-text">闭包</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%B8%E7%A6%BB-DOM-%E5%BC%95%E7%94%A8"><span class="toc-number">3.6.5.</span> <span class="toc-text">游离 DOM 引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%97%E5%BF%98%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="toc-number">3.6.6.</span> <span class="toc-text">遗忘的定时器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%97%E5%BF%98%E7%9A%84%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC%E5%99%A8"><span class="toc-number">3.6.7.</span> <span class="toc-text">遗忘的事件监听器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%97%E5%BF%98%E7%9A%84%E7%9B%91%E5%90%AC%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.6.8.</span> <span class="toc-text">遗忘的监听者模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%97%E5%BF%98%E7%9A%84-Map-Set-%E5%AF%B9%E8%B1%A1"><span class="toc-number">3.6.9.</span> <span class="toc-text">遗忘的 Map,Set 对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AA%E6%B8%85%E7%90%86%E7%9A%84-Console-%E8%BE%93%E5%87%BA"><span class="toc-number">3.6.10.</span> <span class="toc-text">未清理的 Console 输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E6%8E%92%E6%9F%A5-%E5%AE%9A%E4%BD%8D%E5%92%8C%E4%BF%AE%E5%A4%8D"><span class="toc-number">3.6.11.</span> <span class="toc-text">内存泄漏排查,定位和修复</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E9%9D%99%E6%80%81%E5%88%86%E9%85%8D%E4%B8%8E%E5%AF%B9%E8%B1%A1%E6%B1%A0"><span class="toc-number">3.6.12.</span> <span class="toc-text">5.静态分配与对象池</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E6%B1%A0"><span class="toc-number">3.6.12.1.</span> <span class="toc-text">对象池</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E4%B8%89%E5%A4%A7%E4%BB%B6"><span class="toc-number">3.7.</span> <span class="toc-text">内存三大件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">3.7.0.1.</span> <span class="toc-text">内存泄漏</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E8%86%A8%E8%83%80"><span class="toc-number">3.7.0.2.</span> <span class="toc-text">内存膨胀</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A2%91%E7%B9%81-GC"><span class="toc-number">3.7.0.3.</span> <span class="toc-text">频繁 GC</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/04/07/%E7%A2%8E%E7%89%87%E5%8C%96%E5%AD%A6%E4%B9%A0/%E4%B8%BA%E4%BB%80%E4%B9%88Number(0.045).toFixed(2)%20%E6%98%AF0.04/" title="为什么Number(0.045).toFixed(2) 是0.04"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f221c28a83b.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="为什么Number(0.045).toFixed(2) 是0.04"/></a><div class="content"><a class="title" href="/2025/04/07/%E7%A2%8E%E7%89%87%E5%8C%96%E5%AD%A6%E4%B9%A0/%E4%B8%BA%E4%BB%80%E4%B9%88Number(0.045).toFixed(2)%20%E6%98%AF0.04/" title="为什么Number(0.045).toFixed(2) 是0.04">为什么Number(0.045).toFixed(2) 是0.04</a><time datetime="2025-04-06T16:00:00.000Z" title="创建时间 2025-04-07 00:00:00">2025-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/06/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E7%8E%B0%E4%BB%A3%E7%9A%84%E5%BC%80%E5%8F%91%E6%A6%82%E5%BF%B5/" title="现代的开发概念"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f21a77ec874.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="现代的开发概念"/></a><div class="content"><a class="title" href="/2025/04/06/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E7%8E%B0%E4%BB%A3%E7%9A%84%E5%BC%80%E5%8F%91%E6%A6%82%E5%BF%B5/" title="现代的开发概念">现代的开发概念</a><time datetime="2025-04-06T13:55:26.342Z" title="创建时间 2025-04-06 21:55:26">2025-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/27/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E8%84%9A%E6%89%8B%E6%9E%B6/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAvite/" title="深入浅出vite"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f21f80ddae3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="深入浅出vite"/></a><div class="content"><a class="title" href="/2025/03/27/%E5%B7%A5%E7%A8%8B%E5%8C%96/%E8%84%9A%E6%89%8B%E6%9E%B6/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAvite/" title="深入浅出vite">深入浅出vite</a><time datetime="2025-03-27T14:37:00.000Z" title="创建时间 2025-03-27 22:37:00">2025-03-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/07/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="设计模式"/></a><div class="content"><a class="title" href="/2025/03/07/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">设计模式</a><time datetime="2025-03-07T08:06:00.000Z" title="创建时间 2025-03-07 16:06:00">2025-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/25/%E5%B7%A5%E4%BD%9C%E9%9A%8F%E7%AC%94/%E5%89%8D%E7%AB%AF%E5%90%84%E7%AD%89%E7%BA%A7%E8%A6%81%E6%B1%82/" title="前端各等级要求"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://www.helloimg.com/i/2025/04/06/67f225a6d4a11.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端各等级要求"/></a><div class="content"><a class="title" href="/2025/02/25/%E5%B7%A5%E4%BD%9C%E9%9A%8F%E7%AC%94/%E5%89%8D%E7%AB%AF%E5%90%84%E7%AD%89%E7%BA%A7%E8%A6%81%E6%B1%82/" title="前端各等级要求">前端各等级要求</a><time datetime="2025-02-25T07:51:00.000Z" title="创建时间 2025-02-25 15:51:00">2025-02-25</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2020 - 2025 By <a class="footer-bar-link" href="/" title="kitty" target="_blank">kitty</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">Articles</div><div class="length-num">30</div></a><a href="/tags/" title="tag"><div class="headline">Tags</div><div class="length-num">14</div></a><a href="/categories/" title="category"><div class="headline">Categories</div><div class="length-num">6</div></a></div><span class="sidebar-menu-item-title">Function</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="Display Mode"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>Display Mode</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.anheyu.com/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="博客"/><span class="back-menu-item-text">博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://image.anheyu.com/" title="安知鱼图床"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://image.anheyu.com/favicon.ico" alt="安知鱼图床"/><span class="back-menu-item-text">安知鱼图床</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 总览</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 收藏网站</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/JavaScript/" style="font-size: 0.88rem;">JavaScript<sup>14</sup></a><a href="/tags/Promise/" style="font-size: 0.88rem;">Promise<sup>1</sup></a><a href="/tags/vite/" style="font-size: 0.88rem;">vite<sup>2</sup></a><a href="/tags/vue/" style="font-size: 0.88rem;">vue<sup>4</sup></a><a href="/tags/%E5%88%86%E4%BA%AB/" style="font-size: 0.88rem;">分享<sup>2</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 0.88rem;">学习笔记<sup>7</sup></a><a href="/tags/%E5%B7%A5%E4%BD%9C/" style="font-size: 0.88rem;">工作<sup>5</sup></a><a href="/tags/%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87/" style="font-size: 0.88rem;">性能提升<sup>1</sup></a><a href="/tags/%E6%8A%80%E6%9C%AF%E6%8F%90%E5%8D%87/" style="font-size: 0.88rem;">技术提升<sup>1</sup></a><a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">浏览器相关<sup>3</sup></a><a href="/tags/%E6%BA%90%E7%A0%81/" style="font-size: 0.88rem;">源码<sup>2</sup></a><a href="/tags/%E8%84%9A%E6%89%8B%E6%9E%B6/" style="font-size: 0.88rem;">脚手架<sup>2</sup></a><a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 0.88rem;">设计模式<sup>1</sup></a><a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 0.88rem;">面试<sup>3</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script>// 消除控制台打印
+var HoldLog = console.log;
+console.log = function () {};
+let now1 = new Date();
+queueMicrotask(() => {
+  const Log = function () {
+    HoldLog.apply(console, arguments);
+  }; //在恢复前输出日志
+  const grt = new Date("04/01/2021 00:00:00"); //此处修改你的建站时间或者网站上线时间
+  now1.setTime(now1.getTime() + 250);
+  const days = (now1 - grt) / 1000 / 60 / 60 / 24;
+  const dnum = Math.floor(days);
+  const ascll = [
+    `欢迎使用安知鱼!`,
+    `生活明朗, 万物可爱`,
+    `
+        
+       █████╗ ███╗   ██╗███████╗██╗  ██╗██╗██╗   ██╗██╗   ██╗
+      ██╔══██╗████╗  ██║╚══███╔╝██║  ██║██║╚██╗ ██╔╝██║   ██║
+      ███████║██╔██╗ ██║  ███╔╝ ███████║██║ ╚████╔╝ ██║   ██║
+      ██╔══██║██║╚██╗██║ ███╔╝  ██╔══██║██║  ╚██╔╝  ██║   ██║
+      ██║  ██║██║ ╚████║███████╗██║  ██║██║   ██║   ╚██████╔╝
+      ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝
+        
+        `,
+    "已上线",
+    dnum,
+    "天",
+    "©2020 By 安知鱼 V1.6.14",
+  ];
+  const ascll2 = [`NCC2-036`, `调用前置摄像头拍照成功，识别为【小笨蛋】.`, `Photo captured: `, `🤪`];
+
+  setTimeout(
+    Log.bind(
+      console,
+      `\n%c${ascll[0]} %c ${ascll[1]} %c ${ascll[2]} %c${ascll[3]}%c ${ascll[4]}%c ${ascll[5]}\n\n%c ${ascll[6]}\n`,
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      ""
+    )
+  );
+  setTimeout(
+    Log.bind(
+      console,
+      `%c ${ascll2[0]} %c ${ascll2[1]} %c \n${ascll2[2]} %c\n${ascll2[3]}\n`,
+      "color:white; background-color:#4fd953",
+      "",
+      "",
+      'background:url("https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/tinggge.gif") no-repeat;font-size:450%'
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c WELCOME %c 你好，小笨蛋.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(
+      console,
+      "%c ⚡ Powered by 安知鱼 %c 你正在访问 kitty 的博客.",
+      "color:white; background-color:#f0ad4e",
+      ""
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c W23-12 %c 你已打开控制台.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(console, "%c S013-782 %c 你现在正处于监控中.", "color:white; background-color:#d9534f", "")
+  );
+});</script><script async src="/anzhiyu/random.js"></script><div class="js-pjax"><input type="hidden" name="page-type" id="page-type" value="post"></div><script>var visitorMail = "";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>
